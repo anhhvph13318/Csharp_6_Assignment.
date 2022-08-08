@@ -1,0 +1,88 @@
+﻿@page "/sinhvienEdit/{SinhVienID}"
+@using QLSV.Model
+@using QLSVWasm.Services
+
+
+@inject ISinhVienApiClient SinhVienApiClient;
+@inject NavigationManager NavigationManager;
+@if (SinhVien == null)
+{
+<div class="spinner"></div>
+}
+else
+{
+    <h3>Sửa sinh viên: @SinhVien.TenSinhVien</h3>
+
+    <EditForm Model="SinhVien" OnValidSubmit="SubmitSinhVien">
+        <DataAnnotationsValidator />
+        <div class="form-group">
+            <label for="TenSinhVien">Tên sinh viên</label>
+            <InputText class="form-control" @bind-Value="SinhVien.TenSinhVien"></InputText>
+            <ValidationMessage For="()=>SinhVien.TenSinhVien"></ValidationMessage>
+            
+        </div>
+        <div class="form-group">
+            <label for="Tuoi">Tuổi</label>
+            <InputNumber class="form-control" @bind-Value="SinhVien.Tuoi"></InputNumber>
+            <ValidationMessage For="()=>SinhVien.Tuoi"></ValidationMessage>
+            
+        </div>
+        <div class="form-group">
+            <label for="DiaChi">Địa chỉ</label>
+            <InputText class="form-control" @bind-Value="SinhVien.DiaChi"></InputText>
+            <ValidationMessage For="()=>SinhVien.DiaChi"></ValidationMessage>
+            
+        </div>
+        <div class="form-group">
+            <label for="Email">Email</label>
+            <InputText class="form-control" @bind-Value="SinhVien.Email"></InputText>
+            <ValidationMessage For="()=>SinhVien.Email"></ValidationMessage>
+          
+        </div>
+        <div class="form-group">
+            <label for="SDT">Số điện thoại</label>
+            <InputText class="form-control" @bind-Value="SinhVien.SDT"></InputText>
+            <ValidationMessage For="()=>SinhVien.SDT"></ValidationMessage>
+            
+        </div>
+        @*<div class="form-group">
+            <label for="GioiTinh">Giới tính</label>
+            <InputSelect id="changeIsActive" class="form-control" @bind-Value="SinhVien.GioiTinh">
+                <option>Chọn giới tính</option>
+                <option value="true">Nam</option>
+                <option value="false">Nữ</option>
+            </InputSelect>
+            <ValidationMessage For="()=>SinhVien.GioiTinh"></ValidationMessage>
+        </div>*@
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </EditForm>
+}
+
+@code {
+    [Parameter]
+    public string SinhVienID { get; set; }
+
+    private SinhVienUpdateRequest SinhVien;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var sinhVienDTO = await SinhVienApiClient.GetSVDetail(SinhVienID);
+        SinhVien = new SinhVienUpdateRequest();
+        SinhVien.TenSinhVien = sinhVienDTO.TenSinhVien;
+        SinhVien.Tuoi = sinhVienDTO.Tuoi;
+        SinhVien.DiaChi = sinhVienDTO.DiaChi;
+        SinhVien.Email = sinhVienDTO.Email;
+        SinhVien.SDT = sinhVienDTO.SDT;
+        SinhVien.GioiTinh = sinhVienDTO.GioiTinh;
+    }
+
+    private async Task SubmitSinhVien(EditContext context)
+    {
+        var result = await SinhVienApiClient.UpdateSV(Guid.Parse(SinhVienID), SinhVien);
+        if (result)
+        {
+            NavigationManager.NavigateTo("/sinhvien");
+        }
+    }
+}

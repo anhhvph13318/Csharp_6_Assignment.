@@ -1,0 +1,53 @@
+﻿@page "/SinhVienDetails/{SinhVienID}"
+@using QLSVWasm.Services;
+@using QLSV.Model;
+
+@inject ISinhVienApiClient SinhVienApiClient;
+
+
+@if (SinhVien == null)
+{
+    <div class="spinner"></div>
+}
+else
+{
+    <h3>Sinh viên: @SinhVien.TenSinhVien</h3>
+    <table class="table">
+        <tr>
+            <td>Tên sinh viên</td>
+            <td>@SinhVien.TenSinhVien</td>
+        </tr>
+        <tr>
+            <td>Tuổi</td>
+            <td>@SinhVien.Tuoi</td>
+        </tr>
+        <tr>
+            <td>Địa chỉ</td>
+            <td>@SinhVien.DiaChi</td>
+        </tr>
+        <tr>
+            <td>Email</td>
+            <td>@SinhVien.Email</td>
+        </tr>
+        <tr>
+            <td>Số điện thoại</td>
+            <td>@SinhVien.SDT</td>
+        </tr>
+        @*<tr>
+            <td>Giới tính</td>
+            <td>@(SinhVien.GioiTinh ? "Nam" : "Nữ")</td>
+        </tr>*@
+    </table>
+}
+@code {
+    [Parameter]
+    public string SinhVienID { get; set; }
+
+    private SinhVienDTO SinhVien { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        SinhVien = await SinhVienApiClient.GetSVDetail(SinhVienID);
+    }
+}
+

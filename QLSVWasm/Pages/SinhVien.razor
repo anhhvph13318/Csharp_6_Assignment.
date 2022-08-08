@@ -1,0 +1,57 @@
+﻿@page "/sinhvien"
+
+<h3>SinhVien</h3>
+
+@if (SinhViens == null)
+{
+    <div class="spinner"></div>
+}
+else
+{
+    <div>
+        <a class="btn btn-primary"href="/sinhvienCreate">Create</a>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Tên sinh viên
+                </th>
+                <th>
+                    Tuổi
+                </th>
+                <th>
+                    Địa chỉ
+                </th>
+                <th>
+                    Email
+                </th>
+                <th>
+                    Số điện thoại
+                </th>
+             
+             
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in SinhViens)
+            {
+                <tr>
+                    <td>@item.TenSinhVien</td>
+                    <td>@item.Tuoi</td>
+                    <td>@item.DiaChi</td>
+                    <td>@item.Email</td>
+                    <td>@item.SDT</td>
+
+                    <td>
+                        <a href="/SinhVienDetails/@item.Id"class="btn btn-primary">Details</a>
+                        <a href="/sinhvienEdit/@item.Id"class="btn btn-warning">Edit</a>
+                        <button class="btn btn-danger" @onclick="@(()=>Delete(item.Id))">Delete</button>
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
